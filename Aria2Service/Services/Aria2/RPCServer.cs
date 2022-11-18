@@ -26,9 +26,10 @@ public class RPCServerGenerator : IRPCServerGenerator
                 $"--dir={serverConf.Dir}",
                 $"--disk-cache={serverConf.DiskCache}",
                 $"--rpc-secret={serverConf.RpcSecret}",
-                $"--rpc-allow-origin-all={serverConf.RpcAllowOriginAll}"
+                $"--rpc-allow-origin-all={serverConf.RpcAllowOriginAll.ToString().ToLower()}"
             }; //running will. paramters no problem.
         var arg = string.Join(" ", argList);
+        Console.WriteLine(arg);
         
         return new ExecutableManagement(exePath, arg);
     }

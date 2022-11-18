@@ -33,6 +33,11 @@ public class Aria2ClientTest
     [ClassCleanup]
     public static void ClassCleanup()
     {
+
+        var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        var uri = new Uri("http://seopic.699pic.com/photo/50048/7605.jpg_wh1200.jpg");
+        var path = Path.Combine(desktop, uri.AbsolutePath.Split("/").Last());
+        File.Delete(path);
         RPCServer.Terminate();
     }
 
@@ -54,9 +59,7 @@ public class Aria2ClientTest
             },
             0
         );
-        Thread.Sleep(5000); //
-        Console.WriteLine(result);
-        Console.WriteLine("path is: " + path);
+        Thread.Sleep(5000);
         Assert.IsTrue(File.Exists(path));
     }
 }

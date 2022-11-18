@@ -27,6 +27,9 @@ public class RPCServerTest
     public void RPCServer_Runnable()
     {
         Thread.Sleep(5000);
+        //Console.WriteLine(RPCServer.Process.HasExited);
+        //Console.WriteLine(
+        //RPCServer.Process.StandardOutput.ReadToEnd());
         Assert.IsTrue(RPCServer.IsRunning);
     }
 }

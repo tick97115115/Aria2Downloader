@@ -12,21 +12,19 @@ public class ExecutableManagement : IExecutableManagement
 {
     private Process _process;
     public Process Process => _process;
-    private string _exe;
-    public string Exe => _exe;
-    private string _args;
-    public string Args => _args;
+    public string Exe { get; }
+    public string Args { get; }
     private PossibleStates _currentState;
     public PossibleStates CurrentState { get => _currentState; set => _currentState = value; }
     public ExecutableManagement(string exe, string args)
     {
-        _exe = exe;
-        _args = args;
+        Exe = exe;
+        Args = args;
         _currentState = new Terminated();
         _process = new Process();
         _process.Exited += OnExited;
-        _process.StartInfo.FileName = _exe;
-        _process.StartInfo.Arguments = _args;
+        _process.StartInfo.FileName = Exe;
+        _process.StartInfo.Arguments = Args;
         //_process.StartInfo.UseShellExecute = true;
         _process.EnableRaisingEvents = true;
         _process.StartInfo.CreateNoWindow = true;
