@@ -13,32 +13,28 @@ namespace Aria2ServiceTest.Services.Aria2;
 [TestClass]
 public class Aria2ClientTest
 {
-    public static Aria2NetClientGenerator ClientGenerator { get; set; }
-    public static Aria2NetClient Aria2Client { get; set; }
-    public static RPCServerGenerator ServerGenerator { get; set; }
-    public static ExecutableManagement RPCServer { get; set; }
+    public static RPCServerConf configuration = new RPCServerConf()
+    {
+        RpcListenPort = 6800
+    };
+    public static Aria2NetClient Aria2Client { get; set; } = Aria2NetClientGenerator.Generate(configuration);
+    public static RPCServer Server { get; set; } = RPCServerGenerator.Generate(configuration);
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
-        var configuration = new RPCServerConf()
-        {
-            RpcListenPort = 6800
-        };
-        ClientGenerator = new Aria2NetClientGenerator();
-        ServerGenerator = new RPCServerGenerator();
-        RPCServer = ServerGenerator.Generate(configuration);
-        Aria2Client = ClientGenerator.Generate(configuration);
-        RPCServer.Run();
+        Server.Run();
     }
     [ClassCleanup]
     public static void ClassCleanup()
     {
-
+        // Clean test function
         var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         var uri = new Uri("http://seopic.699pic.com/photo/50048/7605.jpg_wh1200.jpg");
         var path = Path.Combine(desktop, uri.AbsolutePath.Split("/").Last());
         File.Delete(path);
-        RPCServer.Terminate();
+
+        // Close server process
+        Server?.Terminate();
     }
 
     [TestMethod]

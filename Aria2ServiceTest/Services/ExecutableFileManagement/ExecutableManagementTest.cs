@@ -21,6 +21,7 @@ public class ExecutableManagementTest
         {
             Aria2cServer.Process.Kill();
             Aria2cServer.Process.WaitForExit();
+            Aria2cServer.Process.Close();
         }
     }
     [TestMethod]

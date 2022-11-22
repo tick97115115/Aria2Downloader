@@ -8,12 +8,6 @@ public interface PossibleStates
     void ToTerminate(IExecutableManagement context);
 }
 
-public enum States
-{
-    Run,
-    Stop
-}
-
 public class Run : PossibleStates
 {
     public void ToRun(IExecutableManagement context)
@@ -25,12 +19,12 @@ public class Run : PossibleStates
     {
         context.Process.Kill();
         context.Process.WaitForExit(); // When you kill process you must invoke function WaitForExit.Because close process needs some time, WaitForExit is used to synchronize the actual process closing behavior with your program.
+        //context.Process.Close(); //This will cause System.InvalidOperationException: No process is associated with this object..
     }
 }
 
 public class Terminated : PossibleStates
 {
-
     public void ToRun(IExecutableManagement context)
     {
         context.Process.Start();

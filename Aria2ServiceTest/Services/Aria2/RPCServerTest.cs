@@ -8,18 +8,20 @@ using Aria2Service.Services.ExecutableFileManagement;
 [TestClass]
 public class RPCServerTest
 {
-    public static RPCServerGenerator ServerGenerator = new RPCServerGenerator();
-    public static ExecutableManagement RPCServer { get; set; } = ServerGenerator.Generate(new RPCServerConf());
+    public static RPCServer Server { get; set; } = RPCServerGenerator.Generate(new RPCServerConf());
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
-        RPCServer.Run();
+        Server.Run();
     }
     [ClassCleanup]
     public static void ClassCleanup()
     {
-        RPCServer.Terminate();
+        if (Server.IsRunning)
+        {
+            Server.Terminate();
+        }
     }
 
 
@@ -27,10 +29,14 @@ public class RPCServerTest
     public void RPCServer_Runnable()
     {
         Thread.Sleep(5000);
-        //Console.WriteLine(RPCServer.Process.HasExited);
-        //Console.WriteLine(
-        //RPCServer.Process.StandardOutput.ReadToEnd());
-        Assert.IsTrue(RPCServer.IsRunning);
+        Assert.IsTrue(Server.IsRunning);
+    }
+
+    [TestMethod]
+    public void RPCServer_SmoothShutdown()
+    {
+        Server.ShutdownAsync().Wait();
+        Assert.IsTrue(Server.IsRunning);
     }
 }
 

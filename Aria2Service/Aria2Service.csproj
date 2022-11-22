@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Aria2.NET" Version="1.0.5" />
+    <PackageReference Include="WatsonWebsocket" Version="3.0.2" />
   </ItemGroup>
 
 </Project>

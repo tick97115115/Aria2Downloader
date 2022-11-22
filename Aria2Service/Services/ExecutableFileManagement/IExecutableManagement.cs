@@ -10,8 +10,6 @@ namespace Aria2Service.Services.ExecutableFileManagement;
 public interface IExecutableManagement
 {
     public Process Process { get; }
-    public string Exe { get; }
-    public string Args { get; }
     public PossibleStates CurrentState { get; set; }
 
     public void Run();

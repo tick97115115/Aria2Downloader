@@ -1,13 +1,35 @@
 ﻿using Aria2Service.Services.ExecutableFileManagement;
-
+using Aria2NET;
 namespace Aria2Service.Services.Aria2;
 
 
 
+public class RPCServer: ExecutableManagement, IRPCServer
+{
+    public RPCServer(string exe, string args, RPCServerConf serverConf): base(exe, args)
+    {
+        ServerConf = serverConf;
+    }
+
+
+    public RPCServerConf ServerConf { get; }
+
+    public async Task ForceShutdownAsync()
+    {
+        var aria2Net = Aria2NetClientGenerator.Generate(ServerConf);
+        await aria2Net.ForceShutdownAsync();
+    }
+
+    public async Task ShutdownAsync()
+    {
+        var aria2Net = Aria2NetClientGenerator.Generate(ServerConf);
+        await aria2Net.ShutdownAsync();
+    }
+}
 
 public class RPCServerGenerator : IRPCServerGenerator
 {
-    public ExecutableManagement Generate(RPCServerConf serverConf)
+    public static RPCServer Generate(RPCServerConf serverConf)
     {
         string exePath;
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
@@ -22,7 +44,7 @@ public class RPCServerGenerator : IRPCServerGenerator
         var argList = new string[] {
                 $"--enable-rpc={serverConf.EnableRpc.ToString().ToLower()}",
                 $"--rpc-listen-port={serverConf.RpcListenPort}",
-                $"--rpc-listen-all={serverConf.RpcListenAll.ToString().ToLower()}",
+                //$"--rpc-listen-all={serverConf.RpcListenAll.ToString().ToLower()}",
                 $"--dir={serverConf.Dir}",
                 $"--disk-cache={serverConf.DiskCache}",
                 $"--rpc-secret={serverConf.RpcSecret}",
@@ -31,7 +53,7 @@ public class RPCServerGenerator : IRPCServerGenerator
         var arg = string.Join(" ", argList);
         Console.WriteLine(arg);
         
-        return new ExecutableManagement(exePath, arg);
+        return new RPCServer(exePath, arg, serverConf);
     }
 }
 
@@ -39,7 +61,7 @@ public class RPCServerConf : IRPCServerConf
 {
     public bool EnableRpc { get; set; } = true;
     public int RpcListenPort { get; set; } = 6800;
-    public bool RpcListenAll{ get; set; } = false;
+    //public bool RpcListenAll{ get; set; } = false;
     public string Dir{ get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     public string DiskCache { get; set; } = "0";
     public string RpcSecret { get; set; } = "MySecret123";
